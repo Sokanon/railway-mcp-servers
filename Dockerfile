@@ -2,14 +2,11 @@ FROM ghcr.io/sparfenyuk/mcp-proxy:latest
 
 USER root
 
-# Install Node.js (for official MCP servers) and uv (for Python-based MCP servers)
-RUN python3 -m ensurepip && \
-    pip install --no-cache-dir uv && \
-    apk add --no-cache nodejs npm
+# Install Node.js for npm-based MCP servers
+RUN apk add --no-cache nodejs npm
 
-# Pre-install official MCP servers
-# fetch is Python-only; memory and sequential-thinking are on npm
-RUN uv tool install mcp-server-fetch && \
+# Install MCP servers: fetch (Python/pip), memory + sequential-thinking (npm)
+RUN pip install --no-cache-dir mcp-server-fetch && \
     npm install -g \
     @modelcontextprotocol/server-memory \
     @modelcontextprotocol/server-sequential-thinking
